@@ -49,7 +49,7 @@ with open("./tmp.py","w") as f:
 if not cmp("./phi.py","./tmp.py"):
 	print("Update available!")
 	yn = input("Do you wish to update (Y/n)? ")
-	if yn.lower() in ["y","yes"]:
+	if yn.lower().replace(" ","") in ["y","yes",""]:
 		print("Updating...")
 		remove("./phi.py")
 		rename("./tmp.py","phi.py")
@@ -66,7 +66,7 @@ with open("./tmp.py","w") as f:
 if not cmp("./launch.py","./tmp.py"):
 	print("Launcher update availalble!")
 	yn = input("Do you wish to update the launcher (Y/n)? ")
-	if yn.lower() in ["y","yes"]:
+	if yn.lower().replace(" ","") in ["y","yes",""]:
 		remove("./launch.py")
 		rename("./tmp.py","launch.py")
 		print("Launcher updated!\nPlease re-run this script.")
