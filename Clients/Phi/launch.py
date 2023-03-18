@@ -65,7 +65,7 @@ if not cmp("./launch.py","./tmp.py"):
 	print("Launcher updated!\nPlease re-run this script.")
 	exit()
 
-print("Alls good! Launching Phi...")
+print("Alright! Alls good! Launching Phi...")
 print("-"*30)
 
 if name == "nt":
