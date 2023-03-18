@@ -47,10 +47,13 @@ with open("./tmp.py","w") as f:
 	f.close()
 
 if not cmp("./phi.py","./tmp.py"):
-	print("Update available! Applying...")
-	remove("./phi.py")
-	rename("./tmp.py","phi.py")
-	print("Update applied successfully!")
+	print("Update available!")
+	yn = input("Do you wish to update (Y/n)? ")
+	if yn.lower() in ["y","yes"]:
+		print("Updating...")
+		remove("./phi.py")
+		rename("./tmp.py","phi.py")
+		print("Update applied successfully!")
 else:
 	remove("./tmp.py")
 
@@ -59,11 +62,13 @@ with open("./tmp.py","w") as f:
 	f.close()
 
 if not cmp("./launch.py","./tmp.py"):
-	print("Launcher update availalble! Applying...")
-	remove("./launch.py")
-	rename("./tmp.py","launch.py")
-	print("Launcher updated!\nPlease re-run this script.")
-	exit()
+	print("Launcher update availalble!")
+	yn = input("Do you wish to update the launcher (Y/n)? ")
+	if yn.lower() in ["y","yes"]:
+		remove("./launch.py")
+		rename("./tmp.py","launch.py")
+		print("Launcher updated!\nPlease re-run this script.")
+		exit()
 else:
 	remove("./tmp.py")
 
