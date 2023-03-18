@@ -54,6 +54,8 @@ if not cmp("./phi.py","./tmp.py"):
 		remove("./phi.py")
 		rename("./tmp.py","phi.py")
 		print("Update applied successfully!")
+	else:
+		remove("./tmp.py")
 else:
 	remove("./tmp.py")
 
@@ -69,6 +71,8 @@ if not cmp("./launch.py","./tmp.py"):
 		rename("./tmp.py","launch.py")
 		print("Launcher updated!\nPlease re-run this script.")
 		exit()
+	else:
+		remove("./tmp.py")
 else:
 	remove("./tmp.py")
 
