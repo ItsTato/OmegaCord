@@ -19,7 +19,7 @@ if ":" in ip:
 else:
 	port:int = input("AT: ")
 
-print("Connecting...")
+print(f"Connecting to {ip} @ {port}...")
 
 soc  = socket.socket(socket.AF_INET)
 try:
