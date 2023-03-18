@@ -41,9 +41,14 @@ import requests
 gitVer = requests.get("https://raw.githubusercontent.com/ItsTato/OmegaCord/master/Clients/Phi/phi.py").text
 
 if not gitVer == full:
+	print("Update available! Applying...")
 	with open("./phi.py","w") as f:
 		f.write(gitVer)
 		f.close()
+	print("Phi updated successfully!")
+
+print("Alls good! Launching Phi...")
+print("-"*30)
 
 if name == "nt":
 	system("py -3 \"./phi.py\"")

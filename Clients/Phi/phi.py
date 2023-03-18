@@ -7,8 +7,6 @@ def clearConsole():
 if __name__ != "__main__":
 	exit()
 
-clearConsole()
-
 ip:str = input("IP: ")
 
 if ":" in ip:
