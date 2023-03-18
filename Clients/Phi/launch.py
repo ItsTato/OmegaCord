@@ -1,4 +1,5 @@
-from os import system, name
+from os import system, name, rename, remove
+from filecmp import cmp
 
 def clearConsole():
 	system("cls" if name in ["nt"] else "clear")
@@ -38,14 +39,31 @@ for i in range(len(file)):
 
 import requests
 
-gitVer = requests.get("https://raw.githubusercontent.com/ItsTato/OmegaCord/master/Clients/Phi/phi.py").text
+phiGitVer = requests.get("https://raw.githubusercontent.com/ItsTato/OmegaCord/master/Clients/Phi/phi.py").text
+launcherGitVer = requests.get("https://raw.githubusercontent.com/ItsTato/OmegaCord/master/Clients/Phi/launch.py").text
 
-if not gitVer == full:
+with open("./tmp.py","w") as f:
+	f.write(phiGitVer)
+	f.close()
+
+if not cmp("./phi.py","./tmp.py"):
 	print("Update available! Applying...")
-	with open("./phi.py","w") as f:
-		f.write(gitVer)
-		f.close()
-	print("Phi updated successfully!")
+	remove("./phi.py")
+	rename("./tmp.py","phi.py")
+	print("Update applied successfully!")
+else:
+	remove("./tmp.py")
+
+with open("./tmp.py","w") as f:
+	f.write(launcherGitVer)
+	f.close()
+
+if not cmp("./launch.py","./tmp.py"):
+	print("Launcher update availalble! Applying...")
+	remove("./launch.py")
+	rename("./tmp.py","launch.py")
+	print("Launcher updated!\nPlease re-run this script.")
+	exit()
 
 print("Alls good! Launching Phi...")
 print("-"*30)
