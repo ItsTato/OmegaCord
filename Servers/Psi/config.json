@@ -1,0 +1,17 @@
+{
+	"VER": "0.3",
+	"WEB": {
+		"FQDN": "of-feedback.at.ply.gg:61836",
+		"HOST": "127.0.0.1",
+		"PORT": 3002
+	},
+	"SOCKET": {
+		"FQDN": "television-passes.at.ply.gg:63461",
+		"HOST": "127.0.0.1",
+		"PORT": 6002
+	},
+	"DATABASE": {
+		"LOCAL_FILE": true,
+		"URI": "./server.sqlite3"
+	}
+}
