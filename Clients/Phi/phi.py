@@ -9,6 +9,10 @@ if __name__ != "__main__":
 
 ip:str = input("IP: ")
 
+ip = ip.replace("tcp://","")
+ip = ip.replace("http://","")
+ip = ip.replace("https://","")
+
 if ":" in ip:
 	port = ip.split(":")[1]
 	ip = ip.split(":")[0]
