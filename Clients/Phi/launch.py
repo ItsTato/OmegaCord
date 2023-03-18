@@ -64,6 +64,8 @@ if not cmp("./launch.py","./tmp.py"):
 	rename("./tmp.py","launch.py")
 	print("Launcher updated!\nPlease re-run this script.")
 	exit()
+else:
+	remove("./tmp.py")
 
 print("Alright! Alls good! Launching Phi...")
 print("-"*30)
