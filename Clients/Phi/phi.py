@@ -4,10 +4,18 @@ from json import loads, dumps
 def clearConsole():
 	os.system("cls" if os.name in ["nt"] else "clear")
 
+if __name__ != "__main__":
+	exit()
+
 clearConsole()
 
 ip:str = input("IP: ")
-port:int = input("AT: ")
+
+if ":" in ip:
+	port = ip.split(":")[1]
+	ip = ip.split(":")[0]
+else:
+	port:int = input("AT: ")
 
 print("Connecting...")
 
