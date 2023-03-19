@@ -1,4 +1,4 @@
 colorama
 requests
 flask
-eventlet
+eventlet==0.33.3

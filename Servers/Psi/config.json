@@ -1,12 +1,12 @@
 {
 	"VER": "0.3",
 	"WEB": {
-		"FQDN": "of-feedback.at.ply.gg:61836",
+		"FQDN": "http://ebb3-201-198-177-50.ngrok.io/",
 		"HOST": "127.0.0.1",
 		"PORT": 3002
 	},
 	"SOCKET": {
-		"FQDN": "television-passes.at.ply.gg:63461",
+		"FQDN": "tcp://television-passes.at.ply.gg:63461",
 		"HOST": "127.0.0.1",
 		"PORT": 6002
 	},

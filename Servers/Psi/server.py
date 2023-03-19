@@ -1,11 +1,6 @@
-import eventlet
-eventlet.monkey_patch()
-
-#import socket
-from eventlet.green import socket
+import socket
 
 import threading, os, sqlite3, json
-from flask import Flask
 
 def clearConsole():
 	os.system("cls" if os.name in ["nt"] else "clear")
@@ -33,8 +28,7 @@ except:
 	print("Configuration file (./config.json) was not loaded successfully.\nIs it corrupted?")
 	exit()
 
-soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-app = Flask(__name__.split(".")[0])
+soc = socket.socket(socket.AF_INET)
 
 try:
 	if config["DATABASE"]["LOCAL_FILE"] == True:
@@ -49,21 +43,9 @@ except:
 	print("Server could not connect to database!")
 	exit()
 
-try:
-	soc.bind((socketHost,socketPort))
-	soc.listen(128)
-	print(f"Server socket now listening on {socketHost}:{socketPort}")
-except:
-	print(f"Server socket could not bind to {socketHost}:{socketPort}!\nPerhaps the IP is invalid?\nPerhaps the port is already in use?")
-	exit()
-
 def doesTableExist(tableName):
 	cur = database.cursor()
 	return False if len(cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}';").fetchall()) == 0 else True
-
-@app.route("/",methods=["GET"])
-def root():
-	return f"Welcome to your <a href=\"https://github.com/ItsTato/OmegaCord\">OmegaCord</a> Psi (v{config['VER']}) server!"
 
 clients:dict = {}
 running:bool = True
@@ -88,6 +70,13 @@ def recv(soc,addr,user):
 			pass
 
 def main():
+	try:
+		soc.bind((socketHost,socketPort))
+		soc.listen(128)
+		print(f"Server socket now listening on {socketHost}:{socketPort}")
+	except:
+		print(f"Server socket could not bind to {socketHost}:{socketPort}!\nPerhaps the IP is invalid?\nPerhaps the port is already in use?")
+		exit()
 	while running == True:
 		com_soc,address = soc.accept()
 		user = com_soc.recv(1024).decode("utf-8")
@@ -98,30 +87,40 @@ def main():
 		recvThread.start()
 
 def web():
-	import eventlet
-	from eventlet import wsgi
-	wsgi.server(eventlet.listen((webHost,webPort)),app)
-	#app.run(host=webHost,port=webPort,debug=False)
+	from flask import Flask
+
+	app = Flask(__name__.split(".")[0])
+
+	@app.route("/",methods=["GET"])
+	def home():
+		return f"Welcome to your <a href=\"https://github.com/ItsTato/OmegaCord\">OmegaCord</a> Psi (v{config['VER']}) server!"
+	
+	@app.route("/api/socket/fqdn",methods=["GET"])
+	def apiSocket():
+		return str(socketFqdn)
+
+	app.run(host=webHost,port=webPort,debug=False)
 
 mainThread = threading.Thread(target=main)
 webThread = threading.Thread(target=web)
 mainThread.setDaemon(True)
 webThread.setDaemon(True)
-mainThread.start()
-webThread.start()
+if __name__ == "__main__":
+	mainThread.start()
+	webThread.start()
 
-def ctrl():
-	while True:
-		cmd = input(f"Psi-v{config['VER']}@OmegaCord> ")
-		if cmd.lower() in ["stop","end"]:
-			print("Disconnecting clients...")
-			for client in clients:
-				try:
-					clients[client]["soc"].close()
-				except:
-					pass
-			running = False
-			print("Server closed.")
-			exit(0)
+	def ctrl():
+		while True:
+			cmd = input(f"Psi-v{config['VER']}@OmegaCord> ")
+			if cmd.lower() in ["stop","end"]:
+				print("Disconnecting clients...")
+				for client in clients:
+					try:
+						clients[client]["soc"].close()
+					except:
+						pass
+				running = False
+				print("Server closed.")
+				exit(0)
 
-ctrl()
+	ctrl()

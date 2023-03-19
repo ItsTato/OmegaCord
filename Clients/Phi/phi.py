@@ -1,5 +1,6 @@
 import socket, threading, os
 from json import loads, dumps
+from requests import get
 
 def clearConsole():
 	os.system("cls" if os.name in ["nt"] else "clear")
@@ -7,19 +8,29 @@ def clearConsole():
 if __name__ != "__main__":
 	exit()
 
-ip:str = input("IP: ")
+addr:str = input("IP: ")
 
-ip = ip.replace("tcp://","")
-ip = ip.replace("http://","")
-ip = ip.replace("https://","")
+#ip = ip.replace("tcp://","")
+#ip = ip.replace("http://","")
+#ip = ip.replace("https://","")
 
-if ":" in ip:
-	port = ip.split(":")[1]
-	ip = ip.split(":")[0]
+print("Attempting to get socket fqdn...")
+
+sockFqdn:str = get(f"{addr}/api/socket/fqdn").text
+
+sockFqdn = sockFqdn.replace("tcp://","")
+sockFqdn = sockFqdn.replace("http://","")
+sockFqdn = sockFqdn.replace("https://","")
+
+if ":" in sockFqdn:
+	sp = sockFqdn.split(":")
+	sockIp = sockFqdn.split(":")[0]
+	sockPort = sockFqdn.split(":")[1]
 else:
-	port:int = input("AT: ")
+	sockIp = sockFqdn
+	sockPort = 6002
 
-print(f"Connecting to {ip} @ {port}...")
+print(f"Connecting to {sockIp} @ {sockPort}...")
 
 soc  = socket.socket(socket.AF_INET)
 try:
