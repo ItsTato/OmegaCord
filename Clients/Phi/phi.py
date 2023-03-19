@@ -34,7 +34,7 @@ print(f"Connecting to {sockIp} @ {sockPort}...")
 
 soc  = socket.socket(socket.AF_INET)
 try:
-	soc.connect((ip,int(port)))
+	soc.connect((sockIp,int(sockPort)))
 except:
 	print("Connection failed!")
 	exit(0)
@@ -60,7 +60,7 @@ recvThread.start()
 
 running:bool = True
 
-prefix = f"{username}@{ip}"
+prefix = f"{username}@{sockIp}"
 
 while running:
 	cmd = input(f"{prefix}> ")
