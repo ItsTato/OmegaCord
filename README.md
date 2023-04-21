@@ -1,2 +1,2 @@
 # OmegaCord
-A chat application made for fun & giggles
+A chat application made for shit & giggles
