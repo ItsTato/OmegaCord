@@ -1,5 +1,4 @@
 import socket, threading, os
-from json import loads, dumps
 from requests import get
 
 def clearConsole():
@@ -8,15 +7,34 @@ def clearConsole():
 if __name__ != "__main__":
 	exit()
 
-addr:str = input("IP: ")
+gettingProtocol:bool = True
 
-#ip = ip.replace("tcp://","")
-#ip = ip.replace("http://","")
-#ip = ip.replace("https://","")
+while gettingProtocol:
+	serverProtocol:str = input("PROTOCOL [HTTP/HTTPS]: ").lower()
+	if serverProtocol in ["http","https"]:
+		gettingProtocol = False
+	else:
+		print("Invalid protocol! Please try again:")
+serverIp:str = input("IP: ")
+
+if not ":" in serverIp:
+	serverPort:str = input("PORT (3002): ")
+	if serverPort in [""," "]:
+		serverPort = 3002
+	serverPort:int = serverPort
+	serverAddress:str = f"{serverProtocol}://{serverIp}:{serverPort}"
+else:
+	serverAddress:str = f"{serverProtocol}://{serverIp}"
 
 print("Attempting to get socket fqdn...")
 
-sockFqdn:str = get(f"{addr}/api/socket/fqdn").text
+toUse:str = ""
+if serverAddress.endswith("/"):
+	toUse = f"{serverAddress}api/socket/fqdn"
+else:
+	toUse = f"{serverAddress}/api/socket/fqdn"
+
+sockFqdn:str = get(f"{toUse}").text
 
 sockFqdn = sockFqdn.replace("tcp://","")
 sockFqdn = sockFqdn.replace("http://","")
@@ -35,7 +53,7 @@ print(f"Connecting to {sockIp} @ {sockPort}...")
 soc  = socket.socket(socket.AF_INET)
 try:
 	soc.connect((sockIp,int(sockPort)))
-except:
+except Exception as e:
 	print("Connection failed!")
 	exit(0)
 
@@ -49,13 +67,18 @@ soc.send(username.encode("utf-8"))
 
 clearConsole()
 
+safeForNoNewLine:bool = True
+
 def recv():
 	while True:
-		msg = soc.recv(1024).decode("utf-8")
-		print(f"\n{msg}")
+		receivedMsg = soc.recv(1024).decode("utf-8")
+		if safeForNoNewLine:
+			print(f"{receivedMsg}")
+		else:
+			print(f"\n{receivedMsg}")
 
 recvThread = threading.Thread(target=recv)
-recvThread.setDaemon(True)
+recvThread.daemon = True
 recvThread.start()
 
 running:bool = True
@@ -64,8 +87,8 @@ prefix = f"{username}@{sockIp}"
 
 while running:
 	cmd = input(f"{prefix}> ")
-	if cmd.lower() in ["end"]:
-		soc.close
+	if cmd.lower() in ["end","disconnect","leave"]:
+		soc.close()
 		running = False
 		exit(0)
 	if cmd.lower() in ["send", "msg"]:

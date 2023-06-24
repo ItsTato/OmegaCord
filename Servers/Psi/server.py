@@ -31,10 +31,10 @@ except:
 soc = socket.socket(socket.AF_INET)
 
 try:
-	if config["DATABASE"]["LOCAL_FILE"] == True:
+	if config["DATABASE"]["LOCAL_FILE"]:
 		database = sqlite3.connect(f"{config['DATABASE']['URI']}")
 		print("Server connected to local file database")
-	elif config["DATABASE"]["LOCAL_FILE"] == False:
+	elif not config["DATABASE"]["LOCAL_FILE"]:
 		database = sqlite3.connect(f"{config['DATABASE']['URI']}")
 		print("Server connected to external database")
 	else:
@@ -60,10 +60,10 @@ def sendAll(toSend):
 			clients.pop(client)
 			continue
 
-def recv(soc,addr,user):
+def recv(passedSocket,addr,user):
 	while True:
 		try:
-			msg = soc.recv(1024).decode("utf-8")
+			msg = passedSocket.recv(1024).decode("utf-8")
 			if str(msg).replace(" ","") != "":
 				sendAll(f"{user}: {msg}")
 		except:
@@ -83,7 +83,7 @@ def main():
 		data = {"soc": com_soc, "addr": address, "user": user}
 		clients[address] = data
 		recvThread = threading.Thread(target=recv,args=(com_soc,address,user))
-		recvThread.setDaemon(True)
+		recvThread.daemon = True
 		recvThread.start()
 
 def web():
@@ -103,8 +103,8 @@ def web():
 
 mainThread = threading.Thread(target=main)
 webThread = threading.Thread(target=web)
-mainThread.setDaemon(True)
-webThread.setDaemon(True)
+mainThread.daemon = True
+webThread.daemon = True
 if __name__ == "__main__":
 	mainThread.start()
 	webThread.start()
@@ -119,6 +119,7 @@ if __name__ == "__main__":
 						clients[client]["soc"].close()
 					except:
 						pass
+				global running
 				running = False
 				print("Server closed.")
 				exit(0)
