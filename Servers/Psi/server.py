@@ -1,15 +1,17 @@
-import socket
+import socket, threading, os, sqlite3, json, colorama
 
-import threading, os, sqlite3, json
+colorama.init()
 
 def clearConsole():
 	os.system("cls" if os.name in ["nt"] else "clear")
 
+proj_dir: str = os.path.dirname(os.path.realpath(__file__))
+
 clearConsole()
 
 config = {}
-if os.path.exists("./config.json"):
-	with open("./config.json","r") as f:
+if os.path.exists(f"{proj_dir}/config.json"):
+	with open(f"{proj_dir}/config.json", "r") as f:
 		config = json.load(f)
 		f.close()
 else:
@@ -32,7 +34,7 @@ soc = socket.socket(socket.AF_INET)
 
 try:
 	if config["DATABASE"]["LOCAL_FILE"]:
-		database = sqlite3.connect(f"{config['DATABASE']['URI']}")
+		database = sqlite3.connect(f"{proj_dir}/{config['DATABASE']['URI']}")
 		print("Server connected to local file database")
 	elif not config["DATABASE"]["LOCAL_FILE"]:
 		database = sqlite3.connect(f"{config['DATABASE']['URI']}")
@@ -108,11 +110,11 @@ webThread.daemon = True
 if __name__ == "__main__":
 	mainThread.start()
 	webThread.start()
-
 	def ctrl():
 		while True:
-			cmd = input(f"Psi-v{config['VER']}@OmegaCord> ")
-			if cmd.lower() in ["stop","end"]:
+			cmd = input(
+				f"{colorama.Fore.RESET}{colorama.Style.RESET_ALL}{colorama.Back.RESET}{socket.gethostname()}{colorama.Fore.LIGHTYELLOW_EX}{colorama.Style.BRIGHT}@{colorama.Style.RESET_ALL}{colorama.Fore.RESET}Psi-v{config['VER']} {colorama.Fore.LIGHTYELLOW_EX}{colorama.Style.BRIGHT}~ {colorama.Fore.RESET}{colorama.Style.RESET_ALL}{colorama.Back.RESET}").lower()
+			if cmd in ["stop","end"]:
 				print("Disconnecting clients...")
 				for client in clients:
 					try:
@@ -123,5 +125,7 @@ if __name__ == "__main__":
 				running = False
 				print("Server closed.")
 				exit(0)
+			if cmd in ["cls","clear"]:
+				os.system("cls" if os.name in ["nt"] else "clear")
 
 	ctrl()

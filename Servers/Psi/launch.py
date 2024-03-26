@@ -1,9 +1,9 @@
-from os import system, name
+from os import system, name, path
 
 def clearConsole():
     system("cls" if name in ["nt"] else "clear")
 
-def safeImport(pack,packPypi:str=None):
+def safeImport(pack, packPypi: str = None):
 	if packPypi == None:
 		packPypi = pack
 	if name == "nt":
@@ -20,13 +20,14 @@ def safeImport(pack,packPypi:str=None):
 safeImport("requests")
 safeImport("colorama")
 safeImport("flask")
-safeImport("eventlet")
 
 clearConsole()
 
 print("Launching sequence completed!\nInitializing server...")
 
+proj_dir:str = path.dirname(path.realpath(__file__))
+
 if name == "nt":
-	system("py -3 \"./server.py\"")
+	system(f"py -3 \"{proj_dir}\\server.py\"")
 else:
-	system("python3 \"/server.py\"")
+	system(f"python3 \"{proj_dir}/server.py\"")
