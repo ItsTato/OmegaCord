@@ -1,0 +1,17 @@
+{
+	"VER": "0.3",
+	"WEB": {
+		"FQDN": "http://127.0.0.1",
+		"HOST": "0.0.0.0",
+		"PORT": 3002
+	},
+	"SOCKET": {
+		"FQDN": "tcp://127.0.0.1",
+		"HOST": "0.0.0.0",
+		"PORT": 6002
+	},
+	"DATABASE": {
+		"LOCAL_FILE": true,
+		"URI": "server.sqlite3"
+	}
+}
