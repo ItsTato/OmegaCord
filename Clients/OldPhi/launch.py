@@ -76,7 +76,7 @@ if not cmp("./launch.py","./tmp.py"):
 else:
 	remove("./tmp.py")
 
-print("Alright! Alls good! Launching Phi...")
+print("Alright! Alls good! Launching OldPhi...")
 print("-"*30)
 
 if name == "nt":
